@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作性价比计算器</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #007aff;
+            --secondary-color: #f5f5f7;
+            --border-color: #d2d2d7;
+            --text-color: #1d1d1f;
+            --light-text: #86868b;
+            --success-color: #34c759;
+            --warning-color: #ff9500;
+            --danger-color: #ff3b30;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: none;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            font-weight: 600;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .form-text {
+            color: var(--light-text);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .result-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .result-label {
+            font-size: 18px;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .result-description {
+            font-size: 16px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .low-value {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .medium-value {
+            background-color: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .high-value {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+        }
+        
+        .very-high-value {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .formula-container {
+            background-color: rgba(0, 122, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group-text {
+            background-color: var(--secondary-color);
+            border-color: var(--border-color);
+            color: var(--light-text);
+        }
+        
+        .info-icon {
+            color: var(--primary-color);
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        .tooltip {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .formula {
+                font-size: 14px;
+            }
+            
+            .result-value {
+                font-size: 36px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">工作性价比计算器</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">计算公式</h5>
+            </div>
+            <div class="card-body">
+                <div class="formula-container">
+                    <div class="formula">
+                        工作性价比 = (平均日薪 × 综合环境系数) ÷ (35 × (工作时长 + 通勤时长 - 0.5摸鱼时长) × 学历系数)
+                    </div>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    填写下方表单，计算您的工作性价比。结果低于0.8表示性价比很低，高于1.5表示性价比很高，高于2.0表示爽爆炸！
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">参数设置</h5>
+            </div>
+            <div class="card-body">
+                <form id="calculatorForm">
+                    <!-- 基本参数 -->
+                    <div class="section-title">基本参数</div>
+                    <div class="form-group">
+                        <label for="salary" class="form-label">平均日薪 (元/天) <i class="bi bi-question-circle info-icon" data-bs-toggle="tooltip" title="您的平均日薪，单位为元/天"></i></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-currency-yen"></i></span>
+                            <input type="number" class="form-control" id="salary" placeholder="请输入您的平均日薪" required>
+                        </div>
+                        <div class="form-text">注：平均日薪单位为元（您又不是某某）</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="workHours" class="form-label">工作时长 (小时/天)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                            <input type="number" class="form-control" id="workHours" placeholder="下班时间 - 上班时间" required step="0.5" min="0">
+                        </div>
+                        <div class="form-text">工作时长 = 下班时间 - 上班时间</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="commuteHours" class="form-label">通勤时长 (小时/天)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-signpost-2"></i></span>
+                            <input type="number" class="form-control" id="commuteHours" placeholder="每天往返通勤的总时间" required step="0.5" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="slackHours" class="form-label">摸鱼时长 (小时/天)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-cup-hot"></i></span>
+                            <input type="number" class="form-control" id="slackHours" placeholder="不干活的时间 + 吃饭时间 + 午休时间" required step="0.5" min="0">
+                        </div>
+                        <div class="form-text">摸鱼时长 = 不干活时长 + 吃饭时长 + 午休时长</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="education" class="form-label">学历</label>
+                        <select class="form-select" id="education" required>
+                            <option value="" selected disabled>请选择您的学历</option>
+                            <option value="0.8">专科及以下</option>
+                            <option value="1.0">普通本科</option>
+                            <option value="1.2">211/985本科</option>
+                            <option value="1.4">普通硕士</option>
+                            <option value="1.6">211/985硕士</option>
+                            <option value="1.8">普通博士</option>
+                            <option value="2.0">211/985博士</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 工作环境系数 -->
+                    <div class="section-title mt-4">工作环境系数</div>
+                    <div class="form-group">
+                        <label class="form-label">工作环境</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workEnvironment" id="workEnv1" value="1.0" checked>
+                            <label class="form-check-label" for="workEnv1">
+                                普通工作环境
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workEnvironment" id="workEnv2" value="0.8">
+                            <label class="form-check-label" for="workEnv2">
+                                偏僻地区或郊区的工厂、工地、艰苦户外等工作环境
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workEnvironment" id="workEnv3" value="0.9">
+                            <label class="form-check-label" for="workEnv3">
+                                工厂、工地、艰苦户外等工作环境
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workEnvironment" id="workEnv4" value="1.1">
+                            <label class="form-check-label" for="workEnv4">
+                                CBD、体制内等工作环境
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 异性环境系数 -->
+                    <div class="form-group">
+                        <label class="form-label">异性环境</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="genderEnvironment" id="genderEnv1" value="1.0" checked>
+                            <label class="form-check-label" for="genderEnv1">
+                                周围好看的异性不多不少
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="genderEnvironment" id="genderEnv2" value="0.9">
+                            <label class="form-check-label" for="genderEnv2">
+                                周围没有好看异性
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="genderEnvironment" id="genderEnv3" value="1.1">
+                            <label class="form-check-label" for="genderEnv3">
+                                周围很多好看异性
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 同事环境系数 -->
+                    <div class="form-group">
+                        <label class="form-label">同事环境</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="colleagueEnvironment" id="colleagueEnv1" value="1.0" checked>
+                            <label class="form-check-label" for="colleagueEnv1">
+                                周围基本上都是普通同事
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="colleagueEnvironment" id="colleagueEnv2" value="0.95">
+                            <label class="form-check-label" for="colleagueEnv2">
+                                周围脑残同事较多
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="colleagueEnvironment" id="colleagueEnv3" value="1.05">
+                            <label class="form-check-label" for="colleagueEnv3">
+                                周围优秀同事较多
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-calculator me-2"></i>计算工作性价比
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 计算结果 -->
+        <div class="card mt-4" id="resultCard" style="display: none;">
+            <div class="card-header">
+                <h5 class="mb-0">计算结果</h5>
+            </div>
+            <div class="card-body">
+                <div class="result-container">
+                    <div class="result-value" id="resultValue">0.00</div>
+                    <div class="result-label">工作性价比指数</div>
+                    <div class="result-description" id="resultDescription"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化提示工具
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+        
+        // 表单提交处理
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取基本参数
+            const salary = parseFloat(document.getElementById('salary').value);
+            const workHours = parseFloat(document.getElementById('workHours').value);
+            const commuteHours = parseFloat(document.getElementById('commuteHours').value);
+            const slackHours = parseFloat(document.getElementById('slackHours').value);
+            const educationValue = parseFloat(document.getElementById('education').value);
+            
+            // 获取环境系数
+            const workEnvValue = parseFloat(document.querySelector('input[name="workEnvironment"]:checked').value);
+            const genderEnvValue = parseFloat(document.querySelector('input[name="genderEnvironment"]:checked').value);
+            const colleagueEnvValue = parseFloat(document.querySelector('input[name="colleagueEnvironment"]:checked').value);
+            
+            // 计算综合环境系数
+            const environmentFactor = workEnvValue * genderEnvValue * colleagueEnvValue;
+            
+            // 计算工作性价比
+            const numerator = salary * environmentFactor;
+            const denominator = 35 * (workHours + commuteHours - 0.5 * slackHours) * educationValue;
+            const workValue = numerator / denominator;
+            
+            // 显示结果
+            document.getElementById('resultValue').textContent = workValue.toFixed(2);
+            
+            // 根据结果值设置描述和样式
+            const resultDescription = document.getElementById('resultDescription');
+            if (workValue < 0.8) {
+                resultDescription.textContent = '您的工作性价比很低，建议考虑换工作或改善当前工作条件。';
+                resultDescription.className = 'result-description low-value';
+            } else if (workValue >= 0.8 && workValue < 1.5) {
+                resultDescription.textContent = '您的工作性价比一般，可以考虑如何提高收入或改善工作环境。';
+                resultDescription.className = 'result-description medium-value';
+            } else if (workValue >= 1.5 && workValue < 2.0) {
+                resultDescription.textContent = '您的工作性价比很高，恭喜您找到了一份不错的工作！';
+                resultDescription.className = 'result-description high-value';
+            } else {
+                resultDescription.textContent = '您的工作性价比爆表了！请珍惜这份工作，太爽了！';
+                resultDescription.className = 'result-description very-high-value';
+            }
+            
+            // 显示结果卡片
+            document.getElementById('resultCard').style.display = 'block';
+            
+            // 滚动到结果区域
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
