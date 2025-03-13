@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #007aff;
-            --secondary-color: #f5f5f7;
-            --border-color: #d2d2d7;
-            --text-color: #1d1d1f;
-            --light-text: #86868b;
-            --success-color: #34c759;
-            --warning-color: #ff9500;
-            --danger-color: #ff3b30;
+            --primary-color: #FF5D5D;
+            --secondary-color: #f7f9fc;
+            --border-color: #e6e8eb;
+            --text-color: #1a1f36;
+            --light-text: #697386;
+            --success-color: #32D583;
+            --warning-color: #FFA500;
+            --danger-color: #FF4D4D;
+            --gradient-start: #FF5D5D;
+            --gradient-end: #FF8080;
         }
         
         body {
@@ -23,6 +25,7 @@
             color: var(--text-color);
             background-color: var(--secondary-color);
             line-height: 1.5;
+            min-height: 100vh;
         }
         
         .container {
@@ -31,57 +34,66 @@
         }
         
         .card {
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: none;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             background-color: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
         }
         
         .card-header {
-            background-color: white;
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border-bottom: none;
+            padding: 20px;
             font-weight: 600;
-            border-radius: 12px 12px 0 0 !important;
+            border-radius: 16px 16px 0 0 !important;
         }
         
         .card-body {
-            padding: 20px;
+            padding: 24px;
         }
         
         .form-label {
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--text-color);
+            font-size: 0.95rem;
         }
         
         .form-control, .form-select {
-            border-radius: 8px;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-color);
             font-size: 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            background-color: var(--secondary-color);
         }
         
         .form-control:focus, .form-select:focus {
             box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
             border-color: var(--primary-color);
+            background-color: white;
         }
         
         .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
         
         .btn-primary:hover {
-            background-color: #0062cc;
-            border-color: #0062cc;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
         }
         
         .btn-primary:active {
@@ -90,34 +102,41 @@
         
         .form-text {
             color: var(--light-text);
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 0.85rem;
+            margin-top: 6px;
         }
         
         .result-container {
             text-align: center;
-            padding: 30px 20px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(88, 86, 214, 0.05));
+            border-radius: 12px;
+            margin: 20px 0;
         }
         
         .result-value {
-            font-size: 48px;
+            font-size: 56px;
             font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
         }
         
         .result-label {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--light-text);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-weight: 500;
         }
         
         .result-description {
             font-size: 16px;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             margin-top: 20px;
             font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .low-value {
@@ -136,52 +155,72 @@
         }
         
         .very-high-value {
-            background-color: rgba(255, 59, 48, 0.1);
-            color: var(--danger-color);
+            background-color: rgba(88, 86, 214, 0.1);
+            color: var(--gradient-end);
         }
         
         .formula-container {
-            background-color: rgba(0, 122, 255, 0.05);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(88, 86, 214, 0.05));
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         
         .formula {
             font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 16px;
-            white-space: nowrap;
-            overflow-x: auto;
-            padding: 5px 0;
+            font-size: 15px;
+            line-height: 1.6;
+            padding: 8px;
+            color: var(--text-color);
+            text-align: center;
         }
         
         .section-title {
             font-weight: 600;
-            margin-bottom: 15px;
+            margin: 30px 0 20px;
             color: var(--text-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         
         .input-group-text {
             background-color: var(--secondary-color);
             border-color: var(--border-color);
             color: var(--light-text);
+            border-radius: 12px 0 0 12px;
+            padding: 0 16px;
         }
         
         .info-icon {
             color: var(--primary-color);
-            margin-left: 5px;
+            margin-left: 6px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         
-        .tooltip {
-            font-size: 14px;
+        .info-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .form-check {
+            margin-bottom: 10px;
+            padding-left: 1.8rem;
+        }
+        
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-left: -1.8rem;
+            margin-top: 0.2rem;
+        }
+        
+        .form-check-label {
+            font-size: 0.95rem;
+            color: var(--text-color);
         }
         
         @media (max-width: 768px) {
@@ -189,16 +228,24 @@
                 padding: 15px;
             }
             
+            .card {
+                margin-bottom: 20px;
+            }
+            
             .formula {
-                font-size: 14px;
+                font-size: 13px;
             }
             
             .result-value {
-                font-size: 36px;
+                font-size: 42px;
             }
             
             .card-body {
-                padding: 15px;
+                padding: 20px;
+            }
+            
+            .btn-primary {
+                padding: 12px 24px;
             }
         }
     </style>
@@ -206,20 +253,28 @@
 <body>
     <div class="container">
         <h1 class="text-center my-4">工作性价比计算器</h1>
+        <div class="alert alert-primary mb-4" role="alert">
+            <h5 class="alert-heading"><i class="bi bi-lightbulb me-2"></i>这是什么？</h5>
+            <p class="mb-0">工作性价比计算器帮助您客观评估当前工作的投入产出比。通过考虑薪资、工作时间、通勤、环境等多个因素，给出一个量化的参考指标。</p>
+        </div>
         
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">计算公式</h5>
+                <h5 class="mb-0">计算公式说明</h5>
             </div>
             <div class="card-body">
                 <div class="formula-container">
                     <div class="formula">
-                        工作性价比 = (平均日薪 × 综合环境系数) ÷ (35 × (工作时长 + 通勤时长 - 0.5摸鱼时长) × 学历系数)
+                        工作性价比 = (月薪 × 综合环境系数) ÷ (月工作日 × 35 × (工作时长 + 通勤时长 - 0.5摸鱼时长) × 学历系数)
                     </div>
                 </div>
                 <div class="alert alert-info" role="alert">
                     <i class="bi bi-info-circle-fill me-2"></i>
-                    填写下方表单，计算您的工作性价比。结果低于0.8表示性价比很低，高于1.5表示性价比很高，高于2.0表示爽爆炸！
+                    <strong>参考标准：</strong><br>
+                    • 低于0.8：工作性价比偏低，建议关注改善空间<br>
+                    • 0.8-1.5：工作性价比一般，符合市场平均水平<br>
+                    • 1.5-2.0：工作性价比较高，是个不错的选择<br>
+                    • 高于2.0：工作性价比极高，非常理想的状态
                 </div>
             </div>
         </div>
@@ -233,19 +288,28 @@
                     <!-- 基本参数 -->
                     <div class="section-title">基本参数</div>
                     <div class="form-group">
-                        <label for="salary" class="form-label">平均日薪 (元/天) <i class="bi bi-question-circle info-icon" data-bs-toggle="tooltip" title="您的平均日薪，单位为元/天"></i></label>
+                        <label for="salary" class="form-label">月薪 (元/月)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-currency-yen"></i></span>
-                            <input type="number" class="form-control" id="salary" placeholder="请输入您的平均日薪" required>
+                            <input type="number" class="form-control" id="salary" placeholder="请输入您的月薪" required value="10000">
                         </div>
-                        <div class="form-text">注：平均日薪单位为元（您又不是某某）</div>
+                        <div class="form-text">注：月薪为税前收入，包括基本工资、补贴等</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workDays" class="form-label">月工作日 (天/月)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input type="number" class="form-control" id="workDays" placeholder="一个月中实际工作的天数" required value="22" min="1" max="31">
+                        </div>
+                        <div class="form-text">一般月工作日约为22天/月（扣除周末）</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="workHours" class="form-label">工作时长 (小时/天)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-clock"></i></span>
-                            <input type="number" class="form-control" id="workHours" placeholder="下班时间 - 上班时间" required step="0.5" min="0">
+                            <input type="number" class="form-control" id="workHours" placeholder="下班时间 - 上班时间" required step="0.5" min="0" value="8">
                         </div>
                         <div class="form-text">工作时长 = 下班时间 - 上班时间</div>
                     </div>
@@ -254,7 +318,7 @@
                         <label for="commuteHours" class="form-label">通勤时长 (小时/天)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-signpost-2"></i></span>
-                            <input type="number" class="form-control" id="commuteHours" placeholder="每天往返通勤的总时间" required step="0.5" min="0">
+                            <input type="number" class="form-control" id="commuteHours" placeholder="每天往返通勤的总时间" required step="0.5" min="0" value="2">
                         </div>
                     </div>
                     
@@ -262,7 +326,7 @@
                         <label for="slackHours" class="form-label">摸鱼时长 (小时/天)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-cup-hot"></i></span>
-                            <input type="number" class="form-control" id="slackHours" placeholder="不干活的时间 + 吃饭时间 + 午休时间" required step="0.5" min="0">
+                            <input type="number" class="form-control" id="slackHours" placeholder="不干活的时间 + 吃饭时间 + 午休时间" required step="0.5" min="0" value="2">
                         </div>
                         <div class="form-text">摸鱼时长 = 不干活时长 + 吃饭时长 + 午休时长</div>
                     </div>
@@ -270,9 +334,8 @@
                     <div class="form-group">
                         <label for="education" class="form-label">学历</label>
                         <select class="form-select" id="education" required>
-                            <option value="" selected disabled>请选择您的学历</option>
                             <option value="0.8">专科及以下</option>
-                            <option value="1.0">普通本科</option>
+                            <option value="1.0" selected>普通本科</option>
                             <option value="1.2">211/985本科</option>
                             <option value="1.4">普通硕士</option>
                             <option value="1.6">211/985硕士</option>
@@ -282,7 +345,7 @@
                     </div>
                     
                     <!-- 工作环境系数 -->
-                    <div class="section-title mt-4">工作环境系数</div>
+                    <div class="section-title">工作环境系数</div>
                     <div class="form-group">
                         <label class="form-label">工作环境</label>
                         <div class="form-check">
@@ -358,7 +421,7 @@
                     </div>
                     
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary btn-lg">
                             <i class="bi bi-calculator me-2"></i>计算工作性价比
                         </button>
                     </div>
@@ -394,7 +457,8 @@
             e.preventDefault();
             
             // 获取基本参数
-            const salary = parseFloat(document.getElementById('salary').value);
+            const monthSalary = parseFloat(document.getElementById('salary').value);
+            const workDays = parseFloat(document.getElementById('workDays').value);
             const workHours = parseFloat(document.getElementById('workHours').value);
             const commuteHours = parseFloat(document.getElementById('commuteHours').value);
             const slackHours = parseFloat(document.getElementById('slackHours').value);
@@ -409,8 +473,8 @@
             const environmentFactor = workEnvValue * genderEnvValue * colleagueEnvValue;
             
             // 计算工作性价比
-            const numerator = salary * environmentFactor;
-            const denominator = 35 * (workHours + commuteHours - 0.5 * slackHours) * educationValue;
+            const numerator = monthSalary * environmentFactor;
+            const denominator = workDays * 35 * (workHours + commuteHours - 0.5 * slackHours) * educationValue;
             const workValue = numerator / denominator;
             
             // 显示结果
@@ -441,3 +505,53 @@
     </script>
 </body>
 </html>
+
+<!-- 添加JavaScript逻辑 -->
+<script>
+    // 在计算结果后添加建议内容
+    const resultAdvice = document.getElementById('resultAdvice');
+    if (workValue < 0.8) {
+        resultAdvice.innerHTML = `
+            • 考虑与主管沟通调薪可能性<br>
+            • 评估当前技能是否需要提升<br>
+            • 关注市场上类似岗位的机会<br>
+            • 思考如何提高工作效率，减少无效时间
+        `;
+    } else if (workValue >= 0.8 && workValue < 1.5) {
+        resultAdvice.innerHTML = `
+            • 继续保持目前的工作状态<br>
+            • 可以考虑提升专业技能<br>
+            • 注意工作与生活的平衡<br>
+            • 建立良好的职业发展规划
+        `;
+    } else if (workValue >= 1.5 && workValue < 2.0) {
+        resultAdvice.innerHTML = `
+            • 当前工作性价比很不错<br>
+            • 建议继续深耕当前领域<br>
+            • 保持良好的工作心态<br>
+            • 注意总结经验，帮助职业成长
+        `;
+    } else {
+        resultAdvice.innerHTML = `
+            • 恭喜！这是一份极具竞争力的工作<br>
+            • 建议好好珍惜当前机会<br>
+            • 持续提升自己的核心竞争力<br>
+            • 保持谦虚学习的心态
+        `;
+    }
+    
+    // 添加输入验证
+    document.getElementById('salary').addEventListener('input', function(e) {
+        const value = parseFloat(e.target.value);
+        if (value > 100000) {
+            alert('请确认月薪输入是否正确，当前输入值似乎偏高');
+        }
+    });
+    
+    document.getElementById('workHours').addEventListener('input', function(e) {
+        const value = parseFloat(e.target.value);
+        if (value > 12) {
+            alert('工作时间似乎偏长，请注意劳逸结合');
+        }
+    });
+</script>
